@@ -1,0 +1,23 @@
+<!--
+<div class='box-database'>
+  <div class='box-title'>Your short links!</div>
+  <div class='box-content'>
+     {{#each keys as |key|}}
+    <table>
+      <tr>
+        <th>Original URL</th>
+        <th>Shortened URL</th>
+        <th>Number of Clicks</th>
+      </tr>
+      <tr>
+      </table>
+       <td>{{key.url}}</td>
+    <td>{{key}}</td>
+    <td>{{key.counter}}</td>
+  </tr>
+</table>
+      <div class='links'>
+        <a href="#/{{key.url}}">
+  </div>
+</div>
+-->
