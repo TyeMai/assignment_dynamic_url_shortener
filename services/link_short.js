@@ -31,12 +31,14 @@ functions.getUrlObjects = (keys) => {
   return new Promise((resolve, reject) => {
     var urlRequestPromises = [];
     for (let key of keys) {
+      //console.log(key)
       urlRequestPromises.push(Promise.resolve(
-        redisClient.getAsync(key).then((urlData) => {
+        redisClient.hgetallAsync(key).then((hashData) => {
+          //console.log(hashData)
           return {
-            code: key.slice(5),
-            url: urlData,
-            count: 0
+            code: key,
+            url: hashData['url:'],
+            count: hashData['count:']
           };
         })));
     }

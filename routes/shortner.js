@@ -22,16 +22,25 @@ router.get('/', (req, res) => {
 router.post('/', (req, res) => {
   var link = req.body.og_link
   var key = link_short.randomNameGen()
-  var count = "count:"
+  //var count = "count:"
   //var keys = []
-  count += key
-  key = "url:" + key
+  //count += key
+  //key = "url:" + key
 
-  redisClient.setnx(key, link)
-  redisClient.setnx(count, 0)
+  //redisClient.setnx(key, link)
+  //redisClient.setnx(count, 0)
 
-  //redisClient.hset()
+  redisClient.hset(key, 'url:', link)
+  redisClient.hset(key, 'count:', "0")
 
+/*
+  redisClient.hkeys("8O96Sp", function (err, replies) {
+    console.log(replies.length + " replies:");
+    replies.forEach(function (reply, i) {
+        console.log("    " + i + ": " + reply);
+    });
+});
+*/
 /*
   redisClient.get('url:tYUZyY', (res, err)=> {
     console.dir(res)
@@ -56,11 +65,11 @@ router.post('/', (req, res) => {
 
 */
 
-  redisClient.keysAsync('url:*').then((keys, err) => {
+  redisClient.keysAsync('*').then((keys, err) => {
     if (err) {
       console.log(err)
     }
-    return keys
+      return keys
   }).then((keys) => {
     var urlObjects = link_short.getUrlObjects((keys))
     return urlObjects
