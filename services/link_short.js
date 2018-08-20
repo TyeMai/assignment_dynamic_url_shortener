@@ -8,13 +8,6 @@ const functions = {}
 //bluebird.promisifyAll(redis)
 
 
-/*
-app.post('/', (req,res) => {
-  var link = req.body.link
-  // break up link and then mradomize
-
-})
-*/
 functions.randomNameGen = () => {
   var randomCharStr = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIKJLMNOPQRSTUVWXYZ0123456789'
   var randomKey = ''
@@ -23,12 +16,7 @@ functions.randomNameGen = () => {
   }
   return randomKey
 }
-/*
-functions.idNum = 0
-functions.id = () => {
-  functions.idNum = functions.idNum++
-}
-*/
+
 
 functions.processKeys = (keys) => {
 
@@ -38,25 +26,67 @@ functions.processKeys = (keys) => {
   console.log(functions.keys)
 }
 
+
 functions.getUrlObjects = (keys) => {
-  return new Promise((resolve) => {
-
-
-  var urlObjects = []
-  for (let key of keys) {
-    if (key.slice(0, 3) === 'url') {
-      redisClient.getAsync(key).then((urlData) => {
-        var urlObject = {
-          code: key.slice(5),
-          url: urlData,
-          count: 0
-        }
-        urlObjects.push(urlObject)
-        //console.log(urlObjects)
-      })
+  return new Promise((resolve, reject) => {
+    var urlRequestPromises = [];
+    for (let key of keys) {
+      urlRequestPromises.push(Promise.resolve(
+        redisClient.getAsync(key).then((urlData) => {
+          return {
+            code: key.slice(5),
+            url: urlData,
+            count: 0
+          };
+        })));
     }
-  }
-  resolve(urlObjects)
-  })
+
+    Promise.all(urlRequestPromises).then((urlObjects) => {
+
+      resolve(urlObjects);
+    });
+  });
 }
+
+/*
+functions.getUrlObjects = () => {
+  var urlKeys = []
+  redisClient.keysAsync('*').then((keys, err) => {
+    if (err) {
+      console.log(err)
+    }
+    return keys
+  }).then((keys) => {
+    var urlObjects = []
+    for (let key of keys) {
+      if (key.slice(0, 3) === 'url') {
+        urlKeys.push(key)
+      }
+    }
+    return urlKeys
+  }).then((urlKeys)=>{
+    for (let key of urlKeys){
+      redisClient.getAsync(urlKeys)
+    }
+
+  } )
+        redisClient.getAsync(urlKeys).then((urlData) => {
+          var urlObject = {
+            code: key.slice(5),
+            url: urlData,
+            count: 0
+          }
+          urlObjects.push(urlObject)
+        })
+
+    }
+  }).then(()=>{
+    var urlObjects = link_short.getUrlObjects((keys))
+    return urlObjects
+
+  })
+
+}
+*/
+
 module.exports = functions
