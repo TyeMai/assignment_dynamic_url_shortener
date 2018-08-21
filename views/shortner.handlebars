@@ -13,3 +13,26 @@
 
   </div>
 </div>
+
+
+<div class='box-database'>
+  <div class='box-title'>Your short links!</div>
+  <div class='box-content'>
+    {{#each urlObjects as |urlObject|}}
+      <table>
+        <tr>
+          <th>Original UR</th>
+          <th>Shortened URL</th>
+          <th>Number of Clicks</th>
+        </tr>
+        <tr>
+          <td>{{urlObject.url}}</td>
+          <td><a href="http://{{urlObject.url}}">{{urlObject.code}}</td>
+          <td>{{urlObject.count}}</td>
+        </tr>
+      </table>
+
+
+          {{/each}}
+
+</div>

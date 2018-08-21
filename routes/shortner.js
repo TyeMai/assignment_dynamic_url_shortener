@@ -10,18 +10,25 @@ const redis = bluebird.promisifyAll(require('redis'));
 const redisClient = redis.createClient()
 
 //bluebird.promisifyAll(redis)
+
 router.get('/', (req, res) => {
-
-  //var urlObjects = link_short.getUrlObjectss
-
-  res.render("shortner" ) //, {
-  //urlObjects: urlObjects
-  //})
-
+  redisClient.keysAsync('*').then((keys, err) => {
+    if (err) {
+      console.log(err)
+    }
+      return keys
+  }).then((keys) => {
+    var urlObjects = link_short.getUrlObjects((keys))
+    return urlObjects
+  }).then((urlObjects) => {
+    res.render("shortner" , {
+      urlObjects:urlObjects
+    })
+  })
 })
 router.post('/', (req, res) => {
   var link = req.body.og_link
-  var key = link_short.randomNameGen()
+  var key = "tye.ma/" + link_short.randomNameGen()
   //var count = "count:"
   //var keys = []
   //count += key
@@ -29,9 +36,13 @@ router.post('/', (req, res) => {
 
   //redisClient.setnx(key, link)
   //redisClient.setnx(count, 0)
+  if(link){
+    redisClient.hset(key, 'url:', link)
+    redisClient.hset(key, 'count:', "0")
+    //console.log('heyhey')
+  }
 
-  redisClient.hset(key, 'url:', link)
-  redisClient.hset(key, 'count:', "0")
+
 
 /*
   redisClient.hkeys("8O96Sp", function (err, replies) {
@@ -64,7 +75,7 @@ router.post('/', (req, res) => {
   })
 
 */
-
+/*
   redisClient.keysAsync('*').then((keys, err) => {
     if (err) {
       console.log(err)
@@ -76,7 +87,7 @@ router.post('/', (req, res) => {
   }).then((urlObjects) => {
     console.log(urlObjects)
   })
-
+*/
 /*
 var m = redisClient.multiAsync();
 m.get('url:*');
