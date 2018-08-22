@@ -5,9 +5,6 @@ const redisClient = bluebird.promisifyAll(redis.createClient())
 const functions = {}
 
 
-//bluebird.promisifyAll(redis)
-
-
 functions.randomNameGen = () => {
   var randomCharStr = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIKJLMNOPQRSTUVWXYZ0123456789'
   var randomKey = ''
@@ -18,23 +15,14 @@ functions.randomNameGen = () => {
 }
 
 
-functions.processKeys = (keys) => {
-
-  functions.keys = keys
-  //console.log(keysPro)
-  //return keysPro
-  console.log(functions.keys)
-}
 
 
 functions.getUrlObjects = (keys) => {
   return new Promise((resolve, reject) => {
     var urlRequestPromises = [];
     for (let key of keys) {
-      //console.log(key)
       urlRequestPromises.push(Promise.resolve(
         redisClient.hgetallAsync(key).then((hashData) => {
-          //console.log(hashData)
           return {
             code: key,
             url: hashData['url:'],
@@ -42,9 +30,7 @@ functions.getUrlObjects = (keys) => {
           };
         })));
     }
-
     Promise.all(urlRequestPromises).then((urlObjects) => {
-
       resolve(urlObjects);
     });
   });
