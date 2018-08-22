@@ -25,7 +25,6 @@ router.get('/', (req, res) => {
       urlObjects: urlObjects
     })
   })
-
 })
 
 

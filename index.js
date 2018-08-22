@@ -1,14 +1,14 @@
 const express = require('express');
 const app = express();
 const redis = require('redis');
-const bluebird = require('bluebird')
+const bluebird = require('bluebird');
 
 const redisClient = bluebird.promisifyAll(redis.createClient())
 const exphbs = require('express-handlebars');
 const functions = require("./services/functions");
 const shortner = require('./routes/shortner');
 const bodyParser = require('body-parser');
-const server = require('http').createServer(app) //we normally dont have to create server with express.
+const server = require('http').createServer(app); //we normally dont have to create server with express.
 const io = require('socket.io')(server);
 
 
@@ -30,10 +30,9 @@ app.use(
   express.static(__dirname + "node_modules/socket.io-client/dist/")
 );
 
-app.use('/', shortner)
+app.use('/', shortner);
 
 io.on("connection", client => {
-
   redisClient.hget(["key", "count"], (err, count) => {
     client.emit("new visit", count);
   });
@@ -43,12 +42,14 @@ io.on("connection", client => {
       io.emit("new count", count);
     });
   });
-
 });
 
 
 
-
-app.listen(4290, () => {
-  console.log('redis uhg or yay!')
+//change to server for websocket.
+server.listen(4290, () => {
+  console.log('im listening')
 })
+//app.listen(4290, () => {
+//  console.log('redis uhg or yay!')
+//})

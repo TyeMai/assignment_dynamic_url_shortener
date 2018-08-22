@@ -1,8 +1,8 @@
 const app = require('express')();
 const redis = require('redis');
-const bluebird = require('bluebird')
-const redisClient = bluebird.promisifyAll(redis.createClient())
-const functions = {}
+const bluebird = require('bluebird');
+const redisClient = bluebird.promisifyAll(redis.createClient());
+const functions = {};
 
 
 functions.randomNameGen = () => {
@@ -34,7 +34,7 @@ functions.getUrlObjects = (keys) => {
       resolve(urlObjects);
     });
   });
-}
+};
 
 /*
 functions.getUrlObjects = () => {
