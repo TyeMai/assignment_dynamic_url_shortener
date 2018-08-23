@@ -17,10 +17,11 @@ router.get('/', (req, res) => {
       console.log(err)
     }
     return keys
-  }).then((keys) => {
-    var urlObjects = functions.getUrlObjects((keys))
-    return urlObjects
-  }).then((urlObjects) => {
+  }).then(functions.getUrlObjects)//((keys) => {
+    //return functions.getUrlObjects((keys)) //can return reidtly.
+    //return urlObjects
+  .then((urlObjects) => {
+    console.log(urlObjects)
     res.render("shortner", {
       urlObjects: urlObjects
     })
@@ -28,15 +29,18 @@ router.get('/', (req, res) => {
 })
 
 
-router.get('/:shortLink', (req, res) => {
-  var pathname = req.params.shortLink
-  var key = req.paramas.key
+router.get('/:code', (req, res) => {
+  //var pathname = req.params.shortLink
+  var code = req.params.code
 
-  console.log(pathname)
-  console.log(key)
+  //console.log(pathname)
+  //console.log(key)
 
   //var http = require("http");
   //var url = require("url");
+
+   //so this will pop out the target url.
+
 
 
   //  http.createServer(function(req, res) {
@@ -45,13 +49,23 @@ router.get('/:shortLink', (req, res) => {
   //res.writeHead(301,{Location: pathname});
   //  res.end();
   //  }).listen(8888);
-  res.redirect('http://' + pathname)
-  // add counter.
+
+  //console.log(code)
+  redisClient.hgetAsync(code,'url:').then((data) =>{
+    console.log(data)
+    if(data){
+      res.redirect("http://" + data)
+      redisClient.hincrby([code, "count:", '1'])
+    }
+
+  })
+
+
 })
 
 router.post('/', (req, res) => {
   var link = req.body.og_link
-  var key = "tye.ma/" + link_short.randomNameGen()
+  var key = functions.randomNameGen()
   //var count = "count:"
   //var keys = []
   //count += key
@@ -129,7 +143,7 @@ router.post('/', (req, res) => {
 /*
 function initElement() {
   var p = document.getElementById("foo");
-  // NOTE: showAlert(); or showAlert(param); will NOT work here.
+  // : showAlert(); or showAlert(param); will NOT work here.
   // Must be a reference to a function name, not a function call.
   p.onclick = showAlert;
 };

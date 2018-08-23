@@ -21,13 +21,13 @@
     {{#each urlObjects as |urlObject|}}
       <table>
         <tr>
-          <th>Original UR</th>
+          <th>Original URL</th>
           <th>Shortened URL</th>
           <th>Number of Visits</th>
         </tr>
         <tr>
-          <td class="url"> {{urlObject.url}} </td>
-          <td class="key" id='{{urlObject.code}}'><a href="/{{urlObject.url}}">{{urlObject.code}}</td>
+          <td class="url"> {{urlObject.targetUrl}} </td>
+          <td class="key" id='{{urlObject.shortUrl}}'><a href="/{{urlObject.id}}" >{{urlObject.shortUrl}}</a></td>
           <td class='visits' >{{urlObject.count}}</td>
         </tr>
       </table>
@@ -43,8 +43,13 @@ let socket = io.connect('http://localhost:4290')
 socket.on('new visit', function(data) {
   // Each row has an ID that is the code from the URL.
   //Get the element with that ID.
-  let $tr = $("#" + data.code)
+  io.emit('new visit', {
+   code: pathname,
+   visits: /* new count goes here */
+});
 
+  let $tr = $("#" + data.code)
+  console.log(data)
   // Get the "visits" element inside this row that
   // contains the count, and update it to contain the
   // new # of visits

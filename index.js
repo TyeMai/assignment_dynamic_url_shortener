@@ -33,14 +33,14 @@ app.use(
 app.use('/', shortner);
 
 io.on("connection", client => {
-  redisClient.hget(["key", "count"], (err, count) => {
+  redisClient.hget([client.code, "count"], (err, count) => {
     client.emit("new visit", count);
   });
 
   client.on("new visit", () => {
-    redisClient.hincr(['key', 'count'], (err, count) => {
-      io.emit("new count", count);
-    });
+    //redisClient.hincr(['key', 'count'], (err, count) => {
+      io.emit("new count", count + code);
+    //});
   });
 });
 

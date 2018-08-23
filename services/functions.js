@@ -7,26 +7,34 @@ const functions = {};
 
 functions.randomNameGen = () => {
   var randomCharStr = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIKJLMNOPQRSTUVWXYZ0123456789'
-  var randomKey = ''
+  var randomCode = ''
   for (var i = 0; i < 6; i++) {
-    randomKey += randomCharStr[Math.floor(Math.random() * randomCharStr.length)]
+    randomCode += randomCharStr[Math.floor(Math.random() * randomCharStr.length)]
   }
-  return randomKey
+  return randomCode
 }
 
 
+functions.buildShortUrl = (code, full) =>{
+  if(full){
+    return 'http://tye.ma/' + code
+    //return code
+  }
 
+  return "tye.ma/" + code
+}
 
-functions.getUrlObjects = (keys) => {
+functions.getUrlObjects = (codes) => {
   return new Promise((resolve, reject) => {
     var urlRequestPromises = [];
-    for (let key of keys) {
+    for (let code of codes) {
       urlRequestPromises.push(Promise.resolve(
-        redisClient.hgetallAsync(key).then((hashData) => {
+        redisClient.hgetallAsync(code).then((hashData) => {
           return {
-            code: key,
-            url: hashData['url:'],
-            count: hashData['count:']
+            shortUrl: functions.buildShortUrl(code),
+            targetUrl: hashData['url:'],
+            count: hashData['count:'],
+            id: code
           };
         })));
     }
