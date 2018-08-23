@@ -33,7 +33,9 @@ app.use(
 app.use('/', shortner);
 
 io.on("connection", client => {
+  // i dont know where id get the client.code from
   redisClient.hget([client.code, "count"], (err, count) => {
+
     client.emit("new visit", count);
   });
 

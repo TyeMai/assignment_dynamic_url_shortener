@@ -13,19 +13,19 @@ const redisClient = redis.createClient()
 
 router.get('/', (req, res) => {
   redisClient.keysAsync('*').then((keys, err) => {
-    if (err) {
-      console.log(err)
-    }
-    return keys
-  }).then(functions.getUrlObjects)//((keys) => {
+      if (err) {
+        console.log(err)
+      }
+      return keys
+    }).then(functions.getUrlObjects) //((keys) => {
     //return functions.getUrlObjects((keys)) //can return reidtly.
     //return urlObjects
-  .then((urlObjects) => {
-    console.log(urlObjects)
-    res.render("shortner", {
-      urlObjects: urlObjects
+    .then((urlObjects) => {
+      console.log(urlObjects)
+      res.render("shortner", {
+        urlObjects: urlObjects
+      })
     })
-  })
 })
 
 
@@ -39,7 +39,7 @@ router.get('/:code', (req, res) => {
   //var http = require("http");
   //var url = require("url");
 
-   //so this will pop out the target url.
+  //so this will pop out the target url.
 
 
 
@@ -51,16 +51,14 @@ router.get('/:code', (req, res) => {
   //  }).listen(8888);
 
   //console.log(code)
-  redisClient.hgetAsync(code,'url:').then((data) =>{
-    console.log(data)
-    if(data){
+
+  redisClient.hgetAsync(code, 'url:').then((data) => {
+    //console.log(data)
+    if (data) {
       res.redirect("http://" + data)
       redisClient.hincrby([code, "count:", '1'])
     }
-
   })
-
-
 })
 
 router.post('/', (req, res) => {
