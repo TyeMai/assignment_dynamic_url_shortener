@@ -27,34 +27,20 @@
         </tr>
         <tr id='{{urlObject.id}}'>
           <td class="url"> {{urlObject.targetUrl}} </td>
-          <td class="key" ><a href="/{{urlObject.id}}" >{{urlObject.shortUrl}}</a></td>
+          <td class="key"><a href="/{{urlObject.id}}">{{urlObject.shortUrl}}</a></td>
           <td class='visits'>{{urlObject.count}}</td>
         </tr>
       </table>
-          {{/each}}
+    {{/each}}
 
-</div>
-<script src="//code.jquery.com/jquery-1.12.0.min.js"></script>
-<script src="/socket.io/socket.io.js"></script>
+  </div>
+  <script src="//code.jquery.com/jquery-1.12.0.min.js"></script>
+  <script src="/socket.io/socket.io.js"></script>
 
-<script>
-let socket = io.connect('http://localhost:4290')
-//console.log('im in the socket')
-socket.on('new visit', function(data) {
-  // Each row has an ID that is the code from the URL.
-  //Get the element with that ID.
-  //io.emit('new visit', {
-   //code: pathname,
-   //visits: /* new count goes here */
-   console.log("this is the data", data)
-   //console.log('im the data!')
-  let $tr = $("#" + data.code)
-  console.log($tr)
-  //console.log(data.count)
-  // Get the "visits" element inside this row that
-  // contains the count, and update it to contain the
-  // new # of visits
-  $tr.find('.visits').html(data.count)
-  console.log()
-  });
-</script>
+  <script>
+    let socket = io.connect('http://localhost:4290')
+    socket.on('new visit', function(data) {
+      let $tr = $("#" + data.code)
+      $tr.find('.visits').html(data.count)
+    });
+  </script>

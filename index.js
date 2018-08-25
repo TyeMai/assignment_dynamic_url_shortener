@@ -28,29 +28,8 @@ app.use(bodyParser.urlencoded({
   extended: true
 }));
 
-
-
-
 app.use('/', shortner);
 
-/*
-io.on("connection", client => {
-  // i dont know where id get the client.code from
-  //redisClient.hget([client.code, "count"], (err, count) => {
-  let count = 10
-    client.emit("new visit", count);
-  //});
-
-  client.on("new visit", () => {
-    //redisClient.hincr(['key', 'count'], (err, count) => {
-      io.emit("new count", count + code);
-    //});
-  });
-});
-
-*/
-
-//change to server for websocket.
 server.listen(4290, () => {
   console.log('im listening')
 });
