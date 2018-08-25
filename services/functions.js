@@ -32,8 +32,8 @@ functions.getUrlObjects = (codes) => {
         redisClient.hgetallAsync(code).then((hashData) => {
           return {
             shortUrl: functions.buildShortUrl(code),
-            targetUrl: hashData['url:'],
-            count: hashData['count:'],
+            targetUrl: hashData.url,
+            count: hashData.count,
             id: code
           };
         })));
